@@ -23,6 +23,7 @@ void loop() {
   Serial.print("Temperature: ");
   Serial.print(t);
   Serial.print(" *C\t");
+  Serial.print("\t");
   Serial.print("Heat index: ");
   Serial.print(hic); //열지수(체감온도)가 출력됩니다.
   Serial.println(" *C ");
