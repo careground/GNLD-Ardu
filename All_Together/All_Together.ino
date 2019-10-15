@@ -60,7 +60,7 @@ void loop()
   int nsoil = analogRead(SOILPIN); //토양습도 센서값 
   int nsoil_per = map(nsoil,170, 1023, 100, 0); //센서값을 %로 변경
     
-  delay(3000); //3초마다 반복
+  delay(1000); //3초마다 반복
   StaticJsonDocument<200> doc;
   doc["temperature"] = temp;
   doc["humidity_percent"] = humidity_per;
@@ -68,7 +68,8 @@ void loop()
   doc["pm10"] = pm10;
   doc["pm2p5"] = pm2p5;
   doc["soil_percent"] = nsoil_per;
-  serializeJson(doc, BTSerial);
+  //serializeJson(doc, BTSerial);
+  serializeJsonPretty(doc, BTSerial);
   BTSerial.println();
 
   //일산화탄소 높을때 red led 출력
