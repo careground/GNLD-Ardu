@@ -10,9 +10,18 @@
 #define DHTPIN 4
 #define MQ7PIN A0
 #define SOILPIN A1
-#define RED 5 //일산화탄소
-#define YELLOW 6 //미세먼지
-#define GREEN 7 //토양수분
+
+#define S_RED 5 //토양수분
+#define S_YELLOW 6 
+#define S_GREEN 7 
+
+#define PM_RED 8 //미세먼지
+#define PM_YELLOW 9 
+#define PM_GREEN 10 
+
+#define CO_RED 11 //일산화탄소
+#define CO_YELLOW 12 
+#define CO_GREEN 13 
 
 int coLimit = 10; //일산화탄소 10ppm 이상 위험
 int dustLimit_pm10 = 100; //pm10 100㎍/㎥ 이상 위험
@@ -33,9 +42,15 @@ void setup()
   pm2008_i2c.begin();
   pm2008_i2c.command();
   
-  pinMode(RED, OUTPUT);
-  pinMode(YELLOW, OUTPUT);
-  pinMode(GREEN, OUTPUT);
+  pinMode(S_RED, OUTPUT);
+  pinMode(S_YELLOW, OUTPUT);
+  pinMode(S_GREEN, OUTPUT);
+  pinMode(PM_RED, OUTPUT);
+  pinMode(PM_YELLOW, OUTPUT);
+  pinMode(PM_GREEN, OUTPUT);
+  pinMode(CO_RED, OUTPUT);
+  pinMode(CO_YELLOW, OUTPUT);
+  pinMode(CO_GREEN, OUTPUT);
 }
 
   
@@ -68,26 +83,33 @@ void loop()
   doc["pm10"] = pm10;
   doc["pm2p5"] = pm2p5;
   doc["soil_percent"] = nsoil_per;
+   Serial.println(temp);
   //serializeJson(doc, BTSerial);
   serializeJsonPretty(doc, BTSerial);
   BTSerial.println();
 
   //일산화탄소 높을때 red led 출력
   if(co > coLimit) {   
-      digitalWrite(RED,HIGH);
+      digitalWrite(CO_RED,HIGH);
+      digitalWrite(CO_GREEN,LOW);
     }else{
-      digitalWrite(RED,LOW);
+      digitalWrite(CO_GREEN,HIGH);
+      digitalWrite(CO_RED,LOW);
     }
    //미세먼지 높을때 yellow led 출력
     if(pm10 > dustLimit_pm10 || pm2p5 > dutLimit_pm2p5) {   
-      digitalWrite(YELLOW,HIGH);
+      digitalWrite(PM_RED,HIGH);
+      digitalWrite(PM_GREEN,LOW);
     }else{
-      digitalWrite(YELLOW,LOW);
+      digitalWrite(PM_GREEN,HIGH);
+      digitalWrite(PM_RED,LOW);
     }
     //토양 습도 낮을때 green led 출력
     if(nsoil_per < soilHumidityLimit) {   
-      digitalWrite(GREEN,HIGH);
+      digitalWrite(S_RED,HIGH);
+      digitalWrite(S_GREEN,LOW);
     }else{
-      digitalWrite(GREEN,LOW);
+      digitalWrite(S_GREEN,HIGH);
+      digitalWrite(S_RED,LOW);
     }
 }
